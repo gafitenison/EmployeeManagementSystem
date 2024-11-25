@@ -1,0 +1,29 @@
+
+    FRONTTOBACK DEVELOPMENT - INVOICE
+    ======================================
+    Invoice Generated on: 2024-11-25 09:06:10
+    
+    Order Details:
+    --------------
+    Order ID       : O9678
+    Description    : Security audit
+    Price          : $466.47
+
+    Client Details:
+    ---------------
+    Client ID      : C009
+    Name           : Charlie Johnson
+    Address        : 491 Park Ave
+    Phone          : +1-590-7874
+    Email          : charlie.johnson@hotmail.com
+
+    Employee Responsible:
+    ---------------------
+    Employee ID    : E016
+    Name           : Lee Ella
+    Position       : 326 Second St
+
+    ======================================
+    Total Amount Due: $466.47
+    Thank you for choosing FrontToBack Development!
+    

@@ -47,43 +47,46 @@ def random_date(start_date, end_date):
 connection = sqlite3.connect("FRONTTOBACK DEVELOPMENT - CLIENT AND EMPLOYEE DATABASE SYSTEM.db")
 cursor = connection.cursor()
 
-# Populate employeeTable
-for i in range(25):
-    employeeID = f"E{i+1:03}"
-    employeeName = random_name()
-    employeeAddress = f"{random.randint(100, 999)} {random.choice(['Main St', 'Second St', 'Third St', 'Fourth St', 'Road Ln', 'Park Rd', 'Grove Rd', 'Ducking Ln', 'Privet Drive', 'Cortis Rd', 'Sydney Rd', 'Upper Park' , 'Baker St', 'New Rd', 'North St', 'Mead Ln', 'Kings Way', 'Berwick Close'])}"
-    employeeDOB = random_date(datetime(1980, 1, 1), datetime(2000, 1, 1))
-    employeePhone = random_phone()
-    employeeEmail = random_email(employeeName)
-    employeeJobTitle = random.choice(['Manager', 'Developer', 'Designer', 'Analyst', 'Security Engineer', 'Consultant', 'Administrator'])
-    employeePosition = random.choice(['Full-Time', 'Part-Time', 'Volunteer'])
-    employeeHireDate = random_date(datetime(2015, 1, 1), datetime(2024, 1, 1))
-    employeeSalary = f"${random.randint(50000, 120000)}"
+# # Populate employeeTable
+# for i in range(25):
+#     employeeID = f"E{i+1:03}"
+#     employeeName = random_name()
+#     employeeAddress = f"{random.randint(100, 999)} {random.choice(['Main St', 'Second St', 'Third St', 'Fourth St', 'Road Ln', 'Park Rd', 'Grove Rd', 'Ducking Ln', 'Privet Drive', 'Cortis Rd', 'Sydney Rd', 'Upper Park' , 'Baker St', 'New Rd', 'North St', 'Mead Ln', 'Kings Way', 'Berwick Close'])}"
+#     employeeDOB = random_date(datetime(1980, 1, 1), datetime(2000, 1, 1))
+#     employeePhone = random_phone()
+#     employeeEmail = random_email(employeeName)
+#     employeeJobTitle = random.choice(['Manager', 'Developer', 'Designer', 'Analyst', 'Security Engineer', 'Consultant', 'Administrator'])
+#     employeePosition = random.choice(['Full-Time', 'Part-Time', 'Volunteer'])
+#     employeeHireDate = random_date(datetime(2015, 1, 1), datetime(2024, 1, 1))
+#     employeeSalary = f"${random.randint(50000, 120000)}"
 
-    cursor.execute('''INSERT INTO employeeTable (employeeID, employeeName, employeeAddress, employeeDOB, employeePhone, 
-                      employeeEmail, employeeJobTitle, employeePosition, employeeHireDate, employeeSalary) 
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
-                   (employeeID, employeeName, employeeAddress, employeeDOB, employeePhone, 
-                    employeeEmail, employeeJobTitle, employeePosition, employeeHireDate, employeeSalary))
+#     cursor.execute('''INSERT INTO employeeTable (employeeID, employeeName, employeeAddress, employeeDOB, employeePhone, 
+#                       employeeEmail, employeeJobTitle, employeePosition, employeeHireDate, employeeSalary) 
+#                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
+#                    (employeeID, employeeName, employeeAddress, employeeDOB, employeePhone, 
+#                     employeeEmail, employeeJobTitle, employeePosition, employeeHireDate, employeeSalary))
 
 def random_product_id():
     return f"P{random.randint(1000, 9999)}"
-
 # Function to populate clientTable with random data
-def populate_client_table(n=10):
-    for _ in range(n):
-        clientID = f"C{random.randint(100, 999)}"
-        clientName = random_name()
-        clientAddress = f"{random.randint(100, 999)} {random.choice(['Main St', 'Second St', 'Third St', 'Park Ave', 'High St'])}"
-        clientPhone = random_phone()
-        clientEmail = random_email(clientName)
-        contactPerson = random_name()
+def populate_client_table(n=25):
+    for i in range(n):
+        clientID = f"C{i+1:03}"  # Generate client IDs like C001, C002, etc.
+        clientName = random_name()  # Generate random client name
+        clientAddress = f"{random.randint(1, 999)} {random.choice(['Main St', 'High St', 'Park Ave', 'Maple Dr', 'Oak Rd'])}"  # Random address
+        clientPhone = random_phone()  # Generate random phone number
+        clientEmail = random_email(clientName)  # Generate random email based on clientName
+        contactPerson = random_name()  # Generate random contact person name
         
-        cursor.execute('''INSERT OR IGNORE INTO clientTable (clientID, clientName, clientAddress, clientPhone, clientEmail, contactPerson)
+        # Insert record into clientTable
+        cursor.execute('''INSERT OR IGNORE INTO clientTable 
+                          (clientID, clientName, clientAddress, clientPhone, clientEmail, contactPerson)
                           VALUES (?, ?, ?, ?, ?, ?)''', 
                        (clientID, clientName, clientAddress, clientPhone, clientEmail, contactPerson))
     connection.commit()
     print(f"{n} random clients inserted into clientTable.")
+populate_client_table(25)
+
 
 
 # Helper function to generate random data
@@ -105,23 +108,23 @@ def random_employee_id():
     return f"E{random.randint(1, 25):03}"
 
 # Function to populate orderTable with random data
-def populate_order_table(n=10):
-    for _ in range(n):
-        orderID = f"O{random.randint(1000, 9999)}"  # Unique order ID
-        clientID = random_client_id()  # Random client ID
-        employeeID = random_employee_id()  # Random employee ID
-        description = random_description()  # Random order description
-        price = round(random.uniform(50.0, 500.0), 2)  # Random price between $50 and $500
+# def populate_order_table(n=10):
+#     for _ in range(n):
+#         orderID = f"O{random.randint(1000, 9999)}"  # Unique order ID
+#         clientID = random_client_id()  # Random client ID
+#         employeeID = random_employee_id()  # Random employee ID
+#         description = random_description()  # Random order description
+#         price = round(random.uniform(50.0, 500.0), 2)  # Random price between $50 and $500
         
-        # Insert the new record into orderTable
-        cursor.execute('''INSERT OR IGNORE INTO orderTable (orderID, clientID, employeeID, description, price)
-                          VALUES (?, ?, ?, ?, ?)''', 
-                       (orderID, clientID, employeeID, description, price))
-    connection.commit()
-    print(f"{n} random orders inserted into orderTable.")
+#         # Insert the new record into orderTable
+#         cursor.execute('''INSERT OR IGNORE INTO orderTable (orderID, clientID, employeeID, description, price)
+#                           VALUES (?, ?, ?, ?, ?)''', 
+#                        (orderID, clientID, employeeID, description, price))
+#     connection.commit()
+#     print(f"{n} random orders inserted into orderTable.")
 
-# Usage
-populate_order_table(10)  # Adjust the number of records as needed
+# # Usage
+# populate_order_table(10)  # Adjust the number of records as needed
 
 
 

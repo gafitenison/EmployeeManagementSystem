@@ -1,0 +1,29 @@
+
+    FRONTTOBACK DEVELOPMENT - INVOICE
+    ======================================
+    Invoice Generated on: 2024-11-25 08:54:38
+    
+    Order Details:
+    --------------
+    Order ID       : O5065
+    Description    : Marketing campaign
+    Price          : $124.23
+
+    Client Details:
+    ---------------
+    Client ID      : C864
+    Name           : b
+    Address        : bb
+    Phone          : 22
+    Email          : ss
+
+    Employee Responsible:
+    ---------------------
+    Employee ID    : E015
+    Name           : John Karen
+    Position       : 294 Upper Park
+
+    ======================================
+    Total Amount Due: $124.23
+    Thank you for choosing FrontToBack Development!
+    

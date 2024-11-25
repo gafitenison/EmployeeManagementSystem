@@ -33,6 +33,8 @@
 import sqlite3
 from os.path import isfile
 import os
+from datetime import datetime
+
 #=======================================================================================
 
 #### GLOBAL DECLARATIONS ####
@@ -121,11 +123,10 @@ def main():
         elif choice == "3":
             orderMenu()
         elif choice == "4":
-            orderID = ""
-            generate_report(orderID)
+            orderID = input("Enter the Order ID for the invoice: ")
+            generate_invoice(orderID)
         elif choice == "x":
             fronttoback.close()
-
 #=======================================================================================
 
 def employeeMenu():
@@ -752,121 +753,71 @@ def display_sorted_orders(orders):
 
 
 #---------------------------------------------------------------------------------------
-# Function to generate a report
-# import sqlite3
-# from datetime import datetime
 
-# # Connect to the database
-# connection = sqlite3.connect("FRONTTOBACK DEVELOPMENT - CLIENT AND EMPLOYEE DATABASE SYSTEM.db")
-# cursor = connection.cursor()
+def generate_invoice(orderID):
+    print("GENERATE INVOICE")
+    print("----------------")
 
-# # Function to generate an invoice
-# def generate_invoice(orderID):
-#     # Fetch order details
-#     cursor.execute("SELECT * FROM orderTable WHERE orderID = ?", (orderID,))
-#     order = cursor.fetchone()
+    # Fetch order details
+    sqlCommand = "SELECT * FROM orderTable WHERE orderID = ?"
+    cursor = fronttoback.cursor()
+    cursor.execute(sqlCommand, (orderID,))
+    order = cursor.fetchone()
+
+    if not order:
+        print("Order not found.")
+        return
+
+    # Fetch client details
+    clientID = order[1]  # Assuming order[1] is the clientID in the order record
+    sqlCommand = "SELECT * FROM clientTable WHERE clientID = ?"
+    cursor.execute(sqlCommand, (clientID,))
+    client = cursor.fetchone()
+
+    # Fetch employee details
+    employeeID = order[2]  # Assuming order[2] is the employeeID in the order record
+    sqlCommand = "SELECT * FROM employeeTable WHERE employeeID = ?"
+    cursor.execute(sqlCommand, (employeeID,))
+    employee = cursor.fetchone()
+
+    # Format the invoice
+    invoice = f"""
+    FRONTTOBACK DEVELOPMENT - INVOICE
+    ======================================
+    Invoice Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
     
-#     if not order:
-#         print("Order not found.")
-#         return
+    Order Details:
+    --------------
+    Order ID       : {order[0]}
+    Description    : {order[3]}
+    Price          : ${order[4]:.2f}
 
-#     # Fetch client details
-#     clientID = order[1]  # Assuming order[1] is the clientID in the order record
-#     cursor.execute("SELECT * FROM clientTable WHERE clientID = ?", (clientID,))
-#     client = cursor.fetchone()
+    Client Details:
+    ---------------
+    Client ID      : {client[0] if client else 'N/A'}
+    Name           : {client[1] if client else 'N/A'}
+    Address        : {client[2] if client else 'N/A'}
+    Phone          : {client[3] if client else 'N/A'}
+    Email          : {client[4] if client else 'N/A'}
 
-#     # Fetch employee details
-#     employeeID = order[2]  # Assuming order[2] is the employeeID in the order record
-#     cursor.execute("SELECT * FROM employeeTable WHERE employeeID = ?", (employeeID,))
-#     employee = cursor.fetchone()
+    Employee Responsible:
+    ---------------------
+    Employee ID    : {employee[0] if employee else 'N/A'}
+    Name           : {employee[1] if employee else 'N/A'}
+    Position       : {employee[2] if employee else 'N/A'}
 
-#     # Format the invoice
-#     invoice = f"""
-#     FRONTTOBACK DEVELOPMENT - INVOICE
-#     ======================================
-#     Invoice Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+    ======================================
+    Total Amount Due: ${order[4]:.2f}
+    Thank you for choosing FrontToBack Development!
+    """
     
-#     Order Details:
-#     --------------
-#     Order ID       : {order[0]}
-#     Description    : {order[3]}
-#     Price          : ${order[4]:.2f}
+    # Print the invoice
+    print(invoice)
 
-#     Client Details:
-#     ---------------
-#     Client ID      : {client[0] if client else 'N/A'}
-#     Name           : {client[1] if client else 'N/A'}
-#     Address        : {client[2] if client else 'N/A'}
-#     Phone          : {client[3] if client else 'N/A'}
-#     Email          : {client[4] if client else 'N/A'}
-
-#     Employee Responsible:
-#     ---------------------
-#     Employee ID    : {employee[0] if employee else 'N/A'}
-#     Name           : {employee[1] if employee else 'N/A'}
-#     Position       : {employee[2] if employee else 'N/A'}
-
-#     ======================================
-#     Total Amount Due: ${order[4]:.2f}
-#     Thank you for choosing FrontToBack Development!
-#     """
-    
-#     # Print the invoice
-#     print(invoice)
-
-#     # Optionally, save the invoice to a file
-#     with open(f"Invoice_{orderID}.txt", "w") as file:
-#         file.write(invoice)
-#     print(f"Invoice saved as Invoice_{orderID}.txt")
-
-# # Usage example
-# orderID = input("Enter the Order ID for the invoice: ")
-# generate_invoice(orderID)
-
-# # Close the database connection after generating the invoice
-# connection.close()
-
-##    # Optionally, save the report to a file
-##    with open(f"Order_Report_{orderID}.txt", "w") as file:
-##        file.write(report)
-##    print(f"Report saved as Order_Report_{orderID}.txt")
-
-# Usage
-
-
-
-
-#---------------------------------------------------------------------------------------
-##def reportMenu():
-##    choice = "0"
-##
-##    while choice != "x":
-##        print("")
-##        print("FRONTTOBACK DEVELOPMENT - REPORT MENU")
-##        print("=====================================")
-##        print("1 - Display all Reports.")
-##        print("2 - Add a new Report.")
-##        print("3 - Edit a Report.")
-##        print("4 - Delete a Report.")
-##        print("5 - Sort and Search Report Records.")
-##        print("x - Back to Main Menu.")
-##
-##        choice = input("\nEnter your choice : ")
-##        print("")
-##
-##        if choice == "1":
-##            generateInvoice()
-##        elif choice == "2":
-##            addNewReport()
-##        elif choice == "3":
-##            editAReport()
-##        elif choice == "4":
-##            deleteAReport()
-##        elif choice == "5":
-##            reportSortAndSearchMenu()
-
-#---------------------------------------------------------------------------------------
+    # Save the invoice to a file
+    filename = f"Invoice_{orderID}.txt"
+    with open(filename, "w") as file:
+        file.write(invoice)
+    print(f"Invoice saved as {filename}")
 
 main()
-
-
